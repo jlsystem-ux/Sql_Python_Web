@@ -3,6 +3,8 @@ This is a simple e-commerce website written with the python Flask framework. It 
 
 It was originally forked off of this repo https://github.com/Himani13040/Flask-E-commerce
 
+#NEW UPDATE 2024 =>  execute the next command in the terminal [python3 main.py] ignore the rest below
+
 # Setup
 In order to use this site locally, clone or download this git repo and then open a command prompt in the folder where you have downloaded these files.
 
