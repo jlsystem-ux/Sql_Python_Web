@@ -1,0 +1,295 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Welcome</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href={{ url_for('static', filename='css/home.css') }} />
+<link rel="stylesheet" href={{ url_for('static', filename='css/topStyle.css') }} />
+</head>
+<body>
+    <!-- Barra de Navegación Mejorada -->
+    <nav class="navbar">
+        <ul class="navbar-menu">
+            <li class="dropdown">
+                <a href="#">Lecciones Básicas</a>
+                <ul class="dropdown-content">
+                    <li><a href="/lesson1">Introducción a SQL</a></li>
+                    <li><a href="/lesson2">Cláusulas SELECT</a></li>
+                    <li><a href="/lesson3">Filtrado de Datos</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Consultas Avanzadas</a></li>
+                <ul class="dropdown-content">
+                    <li><a href="/joins">Joins</a></li>
+                    <li><a href="/subqueries">Subconsultas</a></li>
+                    <li><a href="/indexes">Índices</a></li>
+                </ul>
+            </li>
+            <li><a href="/exercises">Ejercicios Prácticos</a></li>
+            <li><a href="/resources">Recursos</a></li>
+            <li><a href="/community">Comunidad</a></li>
+        </ul>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar...">
+            <button>Buscar</button>
+        </div>
+    </nav>
+
+    <!-- Contenido existente -->
+    <div id="title">
+        <div id="cart">
+            <a class="link" href="/cart">
+                <img src={{url_for('static', filename='images/shoppingCart.png')}} id="cartIcon" />
+                CART {{noOfItems}}
+            </a>
+        </div>
+        {% if not loggedIn %}
+        <div id="signInButton">
+            <a class="link" href="/loginForm">Sign In</a>
+        </div>
+        {% else %}
+        <div class="dropdown">
+            <button class="dropbtn">Hello, <br>{{firstName}}</button>
+            <div class="dropdown-content">
+                <a href="/account/orders">Your orders</a>
+                <a href="/account/profile">Your profile</a>
+                <hr>
+                <a href="/logout">Sign Out</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+<div class="display">
+	<div class="displayCategory">
+    <h2>Shop by Category:</h2>
+    <ul>
+        {% for row in categoryData %}
+        <li>
+            <a href="/displayCategory?categoryId={{ row[0] }}">
+                {{ row[1] }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+	<div>
+		<h2>Items</h2>
+		<table>
+			<tr id="productName">
+				{% for data in itemData %}
+				<td>
+					{{ data[1] }}
+				</td>
+				{% endfor %}
+			</tr>
+			<tr id="productImage">
+				{% for data in itemData %}
+				<td>
+					<a href="/productDescription?productId={{ data[0] }}">
+						<img src="{{ url_for('static', filename='uploads/' + data[4]) }}" id="itemImage" />
+					</a>
+				</td>
+				{% endfor %}
+			</tr>
+			<tr id="productPrice">
+				{% for data in itemData %}
+				<td>
+					${{ data[2] }}
+				</td>
+				{% endfor %}
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class="featured">
+    <h2>Cursos Destacados</h2>
+    <div class="featured-courses">
+        <div class="course">
+            <h3>Introducción a SQL</h3>
+            <p>Aprende los fundamentos de SQL en este curso introductorio.</p>
+            <a href="/course1" class="btn">Ver Curso</a>
+        </div>
+        <div class="course">
+            <h3>Consultas Avanzadas</h3>
+            <p>Domina las consultas avanzadas para manejar datos complejos.</p>
+            <a href="/course2" class="btn">Ver Curso</a>
+        </div>
+        <div class="course">
+            <h3>Ejercicios Prácticos</h3>
+            <p>Practica tus habilidades con ejercicios interactivos.</p>
+            <a href="/exercises" class="btn">Ver Ejercicios</a>
+        </div>
+    </div>
+</div>
+
+<div class="testimonials">
+    <h2>Testimonios</h2>
+    <div class="testimonial">
+        <p>"Gracias a este sitio, aprendí SQL y conseguí un mejor trabajo como tester."</p>
+        <h4>- Juan Pérez</h4>
+    </div>
+    <div class="testimonial">
+        <p>"Los ejercicios prácticos son excelentes para aprender SQL de manera interactiva."</p>
+        <h4>- María López</h4>
+    </div>
+    <div class="testimonial">
+        <p>"El contenido es claro y fácil de seguir. ¡Recomiendo este sitio a todos los testers!"</p>
+        <h4>- Carlos Gómez</h4>
+    </div>
+</div>
+
+<div class="faq">
+    <h2>Preguntas Frecuentes</h2>
+    <div class="question">
+        <h4>¿Qué es SQL?</h4>
+        <p>SQL es un lenguaje de consulta estructurado utilizado para gestionar bases de datos.</p>
+    </div>
+    <div class="question">
+        <h4>¿Cómo puedo practicar SQL en este sitio?</h4>
+        <p>Ofrecemos ejercicios prácticos y un editor de código en línea para practicar SQL.</p>
+    </div>
+    <div class="question">
+        <h4>¿Es necesario registrarse para acceder a los cursos?</h4>
+        <p>No, puedes acceder a algunos recursos sin registrarte, pero para guardar tu progreso y acceder a contenido exclusivo, es necesario registrarse.</p>
+    </div>
+    <div class="question">
+        <h4>¿Puedo descargar recursos desde el sitio?</h4>
+        <p>Sí, ofrecemos guías de referencia, hojas de trucos y ejemplos de código descargables.</p>
+    </div>
+</div>
+
+<div class="code-editor">
+    <h2>Practica SQL en Línea</h2>
+    <div id="editor">SELECT * FROM users;</div>
+    <button id="runQuery" class="btn">Ejecutar Consulta</button>
+    <div id="output">
+        <h3>Resultado:</h3>
+        <pre id="queryResult">Aquí se mostrarán los resultados de tu consulta.</pre>
+    </div>
+</div>
+
+<div class="progress-tracker">
+    <h2>Tu Progreso</h2>
+    <div class="progress-item">
+        <h4>Curso: Introducción a SQL</h4>
+        <div class="progress-bar">
+            <div class="progress" style="width: 70%;"></div>
+        </div>
+        <p>70% completado</p>
+    </div>
+    <div class="progress-item">
+        <h4>Curso: Consultas Avanzadas</h4>
+        <div class="progress-bar">
+            <div class="progress" style="width: 40%;"></div>
+        </div>
+        <p>40% completado</p>
+    </div>
+    <div class="progress-item">
+        <h4>Ejercicios Prácticos</h4>
+        <div class="progress-bar">
+            <div class="progress" style="width: 90%;"></div>
+        </div>
+        <p>90% completado</p>
+    </div>
+</div>
+
+<div class="community">
+    <h2>Únete a Nuestra Comunidad</h2>
+    <p>Interactúa con otros usuarios, haz preguntas y comparte tus conocimientos sobre SQL.</p>
+    <a href="/forum" class="btn">Ir al Foro</a>
+</div>
+
+<div class="gamification">
+    <h2>Logros y Recompensas</h2>
+    <div class="badges">
+        <div class="badge">
+            <img src="{{ url_for('static', filename='images/badge_beginner.png') }}" alt="Principiante">
+            <p>Principiante</p>
+        </div>
+        <div class="badge">
+            <img src="{{ url_for('static', filename='images/badge_intermediate.png') }}" alt="Intermedio">
+            <p>Intermedio</p>
+        </div>
+        <div class="badge">
+            <img src="{{ url_for('static', filename='images/badge_advanced.png') }}" alt="Avanzado">
+            <p>Avanzado</p>
+        </div>
+    </div>
+    <div class="leaderboard">
+        <h3>Tabla de Clasificación</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Posición</th>
+                    <th>Usuario</th>
+                    <th>Puntos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Juan Pérez</td>
+                    <td>1500</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>María López</td>
+                    <td>1200</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Carlos Gómez</td>
+                    <td>1000</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="resources">
+    <h2>Recursos Descargables</h2>
+    <ul>
+        <li>
+            <a href="{{ url_for('static', filename='resources/sql_cheat_sheet.pdf') }}" download>
+                Guía de Referencia Rápida de SQL
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('static', filename='resources/sql_examples.zip') }}" download>
+                Ejemplos de Código SQL
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('static', filename='resources/sql_best_practices.pdf') }}" download>
+                Mejores Prácticas en SQL
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="blog">
+    <h2>Artículos y Tutoriales</h2>
+    <div class="blog-posts">
+        <div class="post">
+            <h3>Cómo escribir consultas SQL eficientes</h3>
+            <p>Aprende las mejores prácticas para optimizar tus consultas SQL y mejorar el rendimiento de tus bases de datos.</p>
+            <a href="/blog/sql-efficient-queries" class="btn">Leer más</a>
+        </div>
+        <div class="post">
+            <h3>Introducción al testing de bases de datos</h3>
+            <p>Descubre cómo realizar pruebas efectivas en bases de datos para garantizar la calidad de los datos.</p>
+            <a href="/blog/database-testing" class="btn">Leer más</a>
+        </div>
+        <div class="post">
+            <h3>Errores comunes al usar SQL y cómo evitarlos</h3>
+            <p>Identifica los errores más comunes al trabajar con SQL y aprende cómo solucionarlos.</p>
+            <a href="/blog/sql-common-errors" class="btn">Leer más</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
