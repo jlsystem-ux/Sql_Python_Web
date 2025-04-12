@@ -1,6 +1,10 @@
 # SQL for Testers 🚀
 
+<<<<<<< HEAD
 ![SQL for Testers Logo](static/images/logo.png)
+=======
+!SQL for Testers Logo
+>>>>>>> ba66c23388a6d6333c0784a3ff7bf1490f1766ab
 
 SQL for Testers is an interactive platform designed to help testers and developers learn and practice SQL in real-time. The platform offers practical exercises, interactive lessons, and a real-time SQL editor to improve your database skills.
 
