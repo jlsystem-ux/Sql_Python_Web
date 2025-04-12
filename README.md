@@ -1,35 +1,143 @@
-# SQL for Testers E-commerce Practice Site
-This is a simple e-commerce website written with the python Flask framework. It allows the user to signup/login and shop. You can then go through a simple checkout workflow (without the payment processing step). The database for this is a written in Sqlite. This application is intended to be used as part of courses I have written that help  software testers learn how to use SQL in their work.  
+# SQL for Testers 🚀
 
-It was originally forked off of this repo https://github.com/Himani13040/Flask-E-commerce
+!SQL for Testers Logo
 
-# Setup
-In order to use this site locally, clone or download this git repo and then open a command prompt in the folder where you have downloaded these files.
+SQL for Testers is an interactive platform designed to help testers and developers learn and practice SQL in real-time. The platform offers practical exercises, interactive lessons, and a real-time SQL editor to improve your database skills.
 
-## python setup
-In order to run this application locally you will need python 3 with the flask library installed.
+## 🌟 Key Features
 
-If you do not have python 3 on your computer you can download and install it from the python website - https://www.python.org/downloads/
+- **Real-time SQL Editor**: Practice SQL queries with immediate feedback
+- **Interactive Exercises**: Learn with practical, real-world exercises
+- **Structured Lessons**: Content organized by difficulty levels
+- **Immediate Feedback**: Instant results for your queries
+- **Modern Interface**: Responsive and user-friendly design
+- **User Authentication**: Registration and login system
+- **Personalized Progress**: Save your progress and completed exercises
 
-Once you have it installed you will need to install the flask library. You can easily do this with pip
+## 🛠️ Technologies Used
 
-```pip install flask```
+- **Backend**: Python, Flask
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Database**: SQLite
+- **SQL Editor**: CodeMirror
+- **UI/UX**: Bootstrap 5, Font Awesome
+- **Authentication**: Flask-Login
 
-## Setup flask
-In order to use flask you will need to tell it what application you want to run. In this case that application is called "main" and so to set it up you will need to create an environment variable called `FLASK_APP` and set the value to `main`. On a Windows machine that would look like 
+## 📋 System Requirements
 
-```set FLASK_APP=main```
+- Python 3.8 or higher
+- pip (Python package manager)
+- Modern web browser (Chrome, Firefox, Safari, Edge)
 
-Note that this is the Windows syntax. You may need to use `export` instead of `set` if you are on a Mac.
+## 🚀 Installation
 
-You will also want to tell Flask that you are working in a development environment so that it will give you more feedback on what is going on.
+1. Clone the repository:
+```bash
+git clone https://github.com/jlsystem-ux/Sql_Python_Web.git
+cd Sql_Python_Web
+```
 
-```set FLASK_ENV=development```
+2. Create a virtual environment (optional but recommended):
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-## Running the Application
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-With flask setup you are ready to start running the application. Simply type the following at the command line.
+4. Initialize the database:
+```bash
+python init_db.py
+```
 
-```flask run```
+5. Run the application:
+```bash
+python app.py
+```
 
-This will start up the application for you and you can go to `http://127.0.0.1:5000/` to see the application!# Sql_Python_Web
+6. Open your browser and visit:
+```
+http://localhost:5000
+```
+
+## 📚 Project Structure
+
+```
+Sql_Python_Web/
+├── app/
+│   ├── static/
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── images/
+│   ├── templates/
+│   ├── __init__.py
+│   └── routes.py
+├── database/
+│   └── database.db
+├── requirements.txt
+├── app.py
+└── README.md
+```
+
+## 🎯 Platform Usage
+
+1. **Registration and Login**
+   - Create an account or sign in
+   - Access your personal profile
+
+2. **Explore Lessons**
+   - Navigate through different categories
+   - Select difficulty level
+   - Follow lessons in order
+
+3. **Practice SQL**
+   - Use the integrated SQL editor
+   - Execute queries in real-time
+   - Receive immediate feedback
+
+4. **Complete Exercises**
+   - Solve practical exercises
+   - Verify your solutions
+   - Save your progress
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## 👥 Authors
+
+- [Luis Alberto Arboleda](https://github.com/jlsystem-ux)
+
+## 🙏 Acknowledgments
+
+- Originally forked from [Flask-E-commerce](https://github.com/Himani13040/Flask-E-commerce)
+- [Flask](https://flask.palletsprojects.com/)
+- [Bootstrap](https://getbootstrap.com/)
+- [CodeMirror](https://codemirror.net/)
+- [Font Awesome](https://fontawesome.com/)
+
+## 📞 Contact
+
+For questions or suggestions, please contact:
+- Email: arboledaluisalberto28@gmail.com
+- Twitter: [@massx_madd](https://x.com/massx_madd)
+- LinkedIn: [Luis Alberto Arboleda](https://www.linkedin.com/in/luisaalbertoarboleda)
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ by <a href="https://github.com/jlsystem-ux">Luis Alberto Arboleda</a></sub>
+</div>
