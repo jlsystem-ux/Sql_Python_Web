@@ -1,0 +1,11 @@
+CHANGELOG.md
+MANIFEST.in
+README.md
+pyproject.toml
+setup.py
+sql_for_testers.egg-info/PKG-INFO
+sql_for_testers.egg-info/SOURCES.txt
+sql_for_testers.egg-info/dependency_links.txt
+sql_for_testers.egg-info/entry_points.txt
+sql_for_testers.egg-info/requires.txt
+sql_for_testers.egg-info/top_level.txt
