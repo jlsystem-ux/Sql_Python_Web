@@ -201,6 +201,7 @@ def login():
 def productDescription():
     loggedIn, firstName, noOfItems = getLoginDetails()
     productId = request.args.get('productId')
+<<<<<<< HEAD
     
     if not productId:
         return redirect(url_for('root'))
@@ -219,6 +220,14 @@ def productDescription():
                          loggedIn=loggedIn, 
                          firstName=firstName, 
                          noOfItems=noOfItems)
+=======
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT productId, name, price, description, image, stock FROM products WHERE productId = ' + productId)
+        productData = cur.fetchone()
+    conn.close()
+    return render_template("productDescription.html", data=productData, loggedIn = loggedIn, firstName = firstName, noOfItems = noOfItems)
+>>>>>>> 56139dfb762069c2038918eed58fa4fc099d26f8
 
 @app.route("/addToCart")
 def addToCart():
@@ -337,6 +346,7 @@ def is_valid(email, password):
 @app.route("/register", methods = ['GET', 'POST'])
 def register():
     if request.method == 'POST':
+<<<<<<< HEAD
         try:
             #Parse form data    
             password = request.form['password']
@@ -369,6 +379,35 @@ def register():
     return redirect(url_for('registrationForm'))
 
 @app.route("/registrationForm")
+=======
+        #Parse form data    
+        password = request.form['password']
+        email = request.form['email']
+        firstName = request.form['firstName']
+        lastName = request.form['lastName']
+        address1 = request.form['address1']
+        zipcode = request.form['zipcode']
+        city = request.form['city']
+        state = request.form['state']
+        country = request.form['country']
+        phone = request.form['phone']
+
+        with sqlite3.connect('database.db') as con:
+            try:
+                cur = con.cursor()
+                cur.execute('INSERT INTO users (password, email, firstName, lastName, address1, zipcode, city, state, country, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (hashlib.md5(password.encode()).hexdigest(), email, firstName, lastName, address1, zipcode, city, state, country, phone))
+
+                con.commit()
+
+                msg = "Registered Successfully"
+            except:
+                con.rollback()
+                msg = "Error occured"
+        con.close()
+        return render_template("login.html", error=msg)
+
+@app.route("/registerationForm")
+>>>>>>> 56139dfb762069c2038918eed58fa4fc099d26f8
 def registrationForm():
     return render_template("register.html")
 
@@ -389,6 +428,7 @@ def parse(data):
         ans.append(curr)
     return ans
 
+<<<<<<< HEAD
 @app.route("/execute-sql", methods=['POST'])
 def execute_sql():
     if 'email' not in session:
@@ -426,5 +466,7 @@ def execute_sql():
     except Exception as e:
         return jsonify({'error': 'Error al ejecutar la consulta'}), 500
 
+=======
+>>>>>>> 56139dfb762069c2038918eed58fa4fc099d26f8
 if __name__ == '__main__':
     app.run(debug=True)

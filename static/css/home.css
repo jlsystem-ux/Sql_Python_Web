@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Variables globales */
 :root {
     --primary-color: #2c3e50;
@@ -294,4 +295,34 @@
         flex: 1;
         justify-content: center;
     }
+=======
+
+#itemImage {
+	height: 250px;
+	width: 200px;
+}
+
+.display {
+	margin-top: 20px;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-bottom: 20px;
+}
+
+table {
+	border-spacing: 20px;
+}
+
+#productName {
+	text-align: center;
+	font-weight: bold;
+}
+
+#productPrice {
+	text-align: center;
+}
+
+.displayCategory ul li {
+	font-size: 20px;
+>>>>>>> 56139dfb762069c2038918eed58fa4fc099d26f8
 }
