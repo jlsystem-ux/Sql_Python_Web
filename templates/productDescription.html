@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data[1] if data else 'Producto no encontrado' }} - SQL for Testers</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href={{ url_for('static', filename='css/topStyle.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', filename='css/productDescription.css') }}>
+</head>
+<body>
+    <!-- Barra de Navegación -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="/">
+                <i class="fas fa-database"></i>
+                SQL for Testers
+            </a>
+        </div>
+        <div class="navbar-actions">
+            <div class="user-actions">
+                {% if not loggedIn %}
+                <a href="/loginForm" class="btn-login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
+                <a href="/registrationForm" class="btn-register"><i class="fas fa-user-plus"></i> Registrarse</a>
+                {% else %}
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        <i class="fas fa-user-circle"></i> {{firstName}}
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="/account/orders"><i class="fas fa-list"></i> Mis Pedidos</a>
+                        <a href="/account/profile"><i class="fas fa-user"></i> Mi Perfil</a>
+                        <hr>
+                        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+                    </div>
+                </div>
+                {% endif %}
+                <a href="/cart" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">{{noOfItems}}</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="product-container">
+        {% if data %}
+        <div class="product-header">
+            <h1>{{data[1]}}</h1>
+        </div>
+        
+        <div class="product-content">
+            <div class="product-image">
+                <img src={{ url_for('static', filename='uploads/'+data[4]) if data[4] else url_for('static', filename='images/no-image.png') }} 
+                     alt="{{data[1]}}" 
+                     class="img-fluid"/>
+            </div>
+            
+            <div class="product-details">
+                <div class="price-section">
+                    <span class="price">${{data[2]}}</span>
+                    {% if data[5] > 0 %}
+                    <span class="stock in-stock">Disponible</span>
+                    {% else %}
+                    <span class="stock out-of-stock">Agotado</span>
+                    {% endif %}
+                </div>
+                
+                <div class="description-section">
+                    <h2>Descripción</h2>
+                    <p>{{data[3]}}</p>
+                </div>
+                
+                <div class="action-buttons">
+                    {% if data[5] > 0 %}
+                    <a href="/addToCart?productId={{data[0]}}" class="btn-add-to-cart">
+                        <i class="fas fa-cart-plus"></i> Agregar al Carrito
+                    </a>
+                    {% else %}
+                    <button class="btn-add-to-cart disabled" disabled>
+                        <i class="fas fa-ban"></i> No Disponible
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="product-not-found">
+            <i class="fas fa-exclamation-circle"></i>
+            <h2>Producto no encontrado</h2>
+            <p>El producto que buscas no está disponible o ha sido eliminado.</p>
+            <a href="/" class="btn-back">Volver al Inicio</a>
+        </div>
+        {% endif %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL for Testers - Aprende SQL en Tiempo Real</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href={{ url_for('static', filename='css/home.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', filename='css/topStyle.css') }}>
+</head>
+<body>
+    <!-- Barra de Navegación -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="/">
+                <i class="fas fa-database"></i>
+                SQL for Testers
+            </a>
+        </div>
+        <ul class="navbar-menu">
+            <li class="dropdown">
+                <a href="#"><i class="fas fa-graduation-cap"></i> Lecciones</a>
+                <ul class="dropdown-content">
+                    <li><a href="/lesson1"><i class="fas fa-play"></i> Introducción a SQL</a></li>
+                    <li><a href="/lesson2"><i class="fas fa-table"></i> Consultas Básicas</a></li>
+                    <li><a href="/lesson3"><i class="fas fa-filter"></i> Filtrado de Datos</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#"><i class="fas fa-chart-line"></i> Avanzado</a>
+                <ul class="dropdown-content">
+                    <li><a href="/joins"><i class="fas fa-link"></i> JOINs</a></li>
+                    <li><a href="/subqueries"><i class="fas fa-code-branch"></i> Subconsultas</a></li>
+                    <li><a href="/indexes"><i class="fas fa-tachometer-alt"></i> Índices</a></li>
+                </ul>
+            </li>
+            <li><a href="/exercises"><i class="fas fa-laptop-code"></i> Ejercicios</a></li>
+            <li><a href="/resources"><i class="fas fa-book"></i> Recursos</a></li>
+            <li><a href="/community"><i class="fas fa-users"></i> Comunidad</a></li>
+        </ul>
+        <div class="navbar-actions">
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar lecciones...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-actions">
+                {% if not loggedIn %}
+                <a href="/loginForm" class="btn-login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
+                <a href="/registrationForm" class="btn-register"><i class="fas fa-user-plus"></i> Registrarse</a>
+                {% else %}
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        <i class="fas fa-user-circle"></i> {{firstName}}
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="/account/orders"><i class="fas fa-list"></i> Mis Pedidos</a>
+                        <a href="/account/profile"><i class="fas fa-user"></i> Mi Perfil</a>
+                        <hr>
+                        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+                    </div>
+                </div>
+                {% endif %}
+                <a href="/cart" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">{{noOfItems}}</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Aprende SQL para Testing</h1>
+                <p>Practica SQL en tiempo real con ejercicios interactivos y feedback inmediato</p>
+                <div class="hero-buttons">
+                    <a href="/exercises" class="btn-primary">Comenzar a Practicar</a>
+                    <a href="/resources" class="btn-secondary">Explorar Recursos</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categorías -->
+        <section class="categories">
+            <h2><i class="fas fa-th-large"></i> Categorías de Aprendizaje</h2>
+            <div class="category-grid">
+                {% for row in categoryData %}
+                <a href="/displayCategory?categoryId={{row[0]}}" class="category-card">
+                    <i class="fas fa-folder"></i>
+                    <h3>{{row[1]}}</h3>
+                    <p>Explora ejercicios y lecciones</p>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Ejercicios Destacados -->
+        <section class="featured-exercises">
+            <h2><i class="fas fa-star"></i> Ejercicios Destacados</h2>
+            <div class="exercise-grid">
+                {% for data in itemData %}
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <h3>{{data[1]}}</h3>
+                        <span class="difficulty-badge">Básico</span>
+                    </div>
+                    <div class="exercise-content">
+                        <p>Practica tus habilidades con este ejercicio interactivo</p>
+                        <a href="/productDescription?productId={{data[0]}}" class="btn-exercise">
+                            <i class="fas fa-play"></i> Comenzar Ejercicio
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Editor SQL en Tiempo Real -->
+        <section class="sql-editor">
+            <h2><i class="fas fa-code"></i> Practica SQL en Tiempo Real</h2>
+            <div class="editor-container">
+                <div class="editor-toolbar">
+                    <button class="btn-toolbar" id="executeQuery"><i class="fas fa-play"></i> Ejecutar</button>
+                    <button class="btn-toolbar" id="resetQuery"><i class="fas fa-redo"></i> Reiniciar</button>
+                    <button class="btn-toolbar" id="showHelp"><i class="fas fa-question-circle"></i> Ayuda</button>
+                </div>
+                <div class="editor-content">
+                    <textarea id="sqlEditor">SELECT * FROM users;</textarea>
+                </div>
+                <div class="editor-results">
+                    <h3>Resultados</h3>
+                    <div class="results-table">
+                        <table id="resultsTable">
+                            <thead>
+                                <tr></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SQL for Testers</h3>
+                <p>Aprende y practica SQL para testing en tiempo real</p>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="/about">Sobre Nosotros</a></li>
+                    <li><a href="/contact">Contacto</a></li>
+                    <li><a href="/privacy">Privacidad</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Redes Sociales</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 SQL for Testers. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/sql/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/sql-hint.min.js"></script>
+    <script>
+        // Inicializar CodeMirror
+        const editor = CodeMirror.fromTextArea(document.getElementById('sqlEditor'), {
+            mode: 'text/x-sql',
+            theme: 'default',
+            lineNumbers: true,
+            indentWithTabs: true,
+            smartIndent: true,
+            lineWrapping: true,
+            matchBrackets: true,
+            autofocus: true,
+            extraKeys: {"Ctrl-Space": "autocomplete"},
+            hintOptions: {
+                tables: {
+                    users: ["id", "email", "firstName", "lastName", "password"],
+                    products: ["productId", "name", "price", "description", "image", "stock"],
+                    categories: ["categoryId", "name"],
+                    cart: ["userId", "productId"]
+                }
+            }
+        });
+
+        // Función para ejecutar la consulta
+        document.getElementById('executeQuery').addEventListener('click', async () => {
+            const query = editor.getValue();
+            const resultsTable = document.getElementById('resultsTable');
+            const thead = resultsTable.querySelector('thead tr');
+            const tbody = resultsTable.querySelector('tbody');
+
+            try {
+                const response = await fetch('/execute-sql', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Limpiar la tabla
+                thead.innerHTML = '';
+                tbody.innerHTML = '';
+
+                // Agregar encabezados
+                data.columns.forEach(column => {
+                    const th = document.createElement('th');
+                    th.textContent = column;
+                    thead.appendChild(th);
+                });
+
+                // Agregar filas
+                data.results.forEach(row => {
+                    const tr = document.createElement('tr');
+                    data.columns.forEach(column => {
+                        const td = document.createElement('td');
+                        td.textContent = row[column] !== null ? row[column] : 'NULL';
+                        tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                });
+
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        // Función para reiniciar el editor
+        document.getElementById('resetQuery').addEventListener('click', () => {
+            editor.setValue('SELECT * FROM users;');
+            editor.focus();
+        });
+
+        // Función para mostrar ayuda
+        document.getElementById('showHelp').addEventListener('click', () => {
+            alert('Ejemplos de consultas:\n\n' +
+                  'SELECT * FROM users;\n' +
+                  'SELECT name, email FROM users WHERE id = 1;\n' +
+                  'SELECT * FROM products WHERE stock > 0;\n' +
+                  'SELECT p.name, c.name FROM products p JOIN categories c ON p.categoryId = c.categoryId;\n\n' +
+                  'Sugerencias:\n' +
+                  '- Usa Ctrl+Space para autocompletar\n' +
+                  '- Las consultas deben terminar con punto y coma (;)\n' +
+                  '- Debes estar autenticado para ejecutar consultas');
+        });
+    </script>
+</body>
+</html>
+
