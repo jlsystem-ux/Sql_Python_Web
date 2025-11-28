@@ -12,15 +12,56 @@ app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-prod')
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'jpeg', 'jpg', 'png', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-DATABASE = 'database.db'
+app.config['DATABASE'] = 'database.db'
 
-def get_db():
-    """Get a database connection from the global context or create a new one."""
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-        db.row_factory = sqlite3.Row
-    return db
+# Lesson Data
+lessons_data = {
+    1: {
+        "title": "Introducción a SQL",
+        "content": "SQL (Structured Query Language) es el lenguaje estándar para gestionar bases de datos relacionales. En esta lección aprenderás qué es una base de datos, una tabla y cómo realizar tu primera consulta.",
+        "examples": [
+            {"title": "Tu primera consulta", "code": "SELECT * FROM users;"}
+        ]
+    },
+    2: {
+        "title": "Consultas Básicas",
+        "content": "La sentencia SELECT es la más importante en SQL. Te permite recuperar datos de una o más tablas. Aprenderemos a seleccionar columnas específicas.",
+        "examples": [
+            {"title": "Seleccionar columnas específicas", "code": "SELECT firstName, email FROM users;"}
+        ]
+    },
+    3: {
+        "title": "Filtrado de Datos",
+        "content": "La cláusula WHERE te permite filtrar resultados para obtener solo los datos que cumplen con ciertas condiciones.",
+        "examples": [
+            {"title": "Filtrar por ID", "code": "SELECT * FROM users WHERE userId = 1;"}
+        ]
+    }
+}
+
+challenges_data = {
+    1: {
+        "title": "Seleccionar Todos los Usuarios",
+        "description": "Recupera todas las columnas de la tabla 'users'.",
+        "difficulty": "Básico",
+        "solution_query": "SELECT * FROM users",
+        "hint": "Usa SELECT * FROM nombre_tabla"
+    },
+    2: {
+        "title": "Nombres de Productos",
+        "description": "Obtén solo el nombre (name) y el precio (price) de todos los productos.",
+        "difficulty": "Básico",
+        "solution_query": "SELECT name, price FROM products",
+        "hint": "Especifica las columnas separadas por coma: SELECT col1, col2 FROM..."
+    },
+    3: {
+        "title": "Productos Caros",
+        "description": "Encuentra todos los productos que cuesten más de 20 dólares.",
+        "difficulty": "Intermedio",
+        "solution_query": "SELECT * FROM products WHERE price > 20",
+        "hint": "Usa la cláusula WHERE con el operador >"
+    }
+}
 
 @app.teardown_appcontext
 def close_connection(exception):
@@ -28,6 +69,14 @@ def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
+
+def get_db():
+    """Get a database connection from the global context or create a new one."""
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(app.config['DATABASE'])
+        db.row_factory = sqlite3.Row
+    return db
 
 def login_required(f):
     """Decorator to require login for specific routes."""
@@ -77,8 +126,6 @@ def allowed_file(filename):
     return '.' in filename and \
             filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
-
 # Home page
 @app.route("/")
 def root():
@@ -89,8 +136,14 @@ def root():
     cur.execute('SELECT categoryId, name FROM categories')
     categoryData = cur.fetchall()
     
-
     return render_template('home.html', itemData=itemData, categoryData=categoryData)
+
+@app.route("/lesson/<int:lesson_id>")
+def lesson(lesson_id):
+    lesson = lessons_data.get(lesson_id)
+    if not lesson:
+        return render_template('generic_page.html', title="Lección no encontrada", content="La lección que buscas no existe."), 404
+    return render_template('lesson.html', title=lesson['title'], content=lesson['content'], examples=lesson['examples'])
 
 # Display all items of a category
 @app.route("/displayCategory")
@@ -110,6 +163,60 @@ def displayCategory():
     categoryName = data[0]['name'] if data else "Category"
 
     return render_template('displayCategory.html', data=data, categoryName=categoryName)
+
+@app.route("/exercise/<int:exercise_id>")
+def exercise(exercise_id):
+    exercise = challenges_data.get(exercise_id)
+    if not exercise:
+        return render_template('404.html'), 404
+    return render_template('exercise.html', exercise=exercise, exercise_id=exercise_id)
+
+@app.route("/validate-query", methods=["POST"])
+@login_required
+def validate_query():
+    data = request.get_json()
+    user_query = data.get('query')
+    exercise_id = data.get('exerciseId')
+    
+    if not user_query or not exercise_id:
+        return jsonify({'error': 'Faltan datos'}), 400
+        
+    exercise = challenges_data.get(int(exercise_id))
+    if not exercise:
+        return jsonify({'error': 'Ejercicio no encontrado'}), 404
+
+    conn = get_db()
+    try:
+        cur = conn.cursor()
+        
+        # 1. Execute User Query
+        cur.execute(user_query)
+        user_rows = cur.fetchall()
+        user_columns = [description[0] for description in cur.description]
+        user_results = [dict(zip(user_columns, row)) for row in user_rows]
+        
+        # 2. Execute Solution Query
+        cur.execute(exercise['solution_query'])
+        solution_rows = cur.fetchall()
+        solution_columns = [description[0] for description in cur.description]
+        solution_results = [dict(zip(solution_columns, row)) for row in solution_rows]
+        
+        # 3. Compare Results
+        is_correct = (user_results == solution_results)
+        
+        message = "¡Correcto! Has resuelto el ejercicio." if is_correct else "Los resultados no coinciden con la solución esperada."
+        
+        return jsonify({
+            'correct': is_correct,
+            'message': message,
+            'user_results': user_results,
+            'user_columns': user_columns
+        })
+        
+    except sqlite3.Error as e:
+        return jsonify({'error': str(e)}), 400
+    finally:
+        conn.close()
 
 @app.route("/account/profile")
 @login_required
@@ -413,53 +520,6 @@ def execute_sql():
             
     except sqlite3.Error as e:
         return jsonify({'error': str(e)}), 400
-    except Exception as e:
-        return jsonify({'error': 'Error al ejecutar la consulta'}), 500
-
-@app.route("/lesson<int:lesson_id>")
-def lesson(lesson_id):
-    titles = {
-        1: "Introducción a SQL",
-        2: "Consultas Básicas",
-        3: "Filtrado de Datos"
-    }
-    title = titles.get(lesson_id, "Lección")
-    content = f"Bienvenido a la lección {lesson_id}. Aquí aprenderás sobre {title}."
-    return render_template('lesson.html', title=title, content=content)
-
-@app.route("/joins")
-def joins():
-    return render_template('lesson.html', title="JOINs", content="Aprende a combinar datos de múltiples tablas.")
-
-@app.route("/subqueries")
-def subqueries():
-    return render_template('lesson.html', title="Subconsultas", content="Aprende a usar consultas anidadas.")
-
-@app.route("/indexes")
-def indexes():
-    return render_template('lesson.html', title="Índices", content="Optimiza tus consultas con índices.")
-
-@app.route("/exercises")
-def exercises():
-    return render_template('generic_page.html', title="Ejercicios", content="Práctica con nuestros ejercicios interactivos.")
-
-@app.route("/resources")
-def resources():
-    return render_template('generic_page.html', title="Recursos", content="Documentación y guías útiles.")
-
-@app.route("/community")
-def community():
-    return render_template('generic_page.html', title="Comunidad", content="Únete a otros testers aprendiendo SQL.")
-
-@app.route("/search")
-def searchProducts():
-    query = request.args.get('searchQuery')
-    db = get_db()
-    cur = db.cursor()
-    cur.execute("SELECT productId, name, price, description, image, stock FROM products WHERE name LIKE ?", ('%' + query + '%',))
-    data = cur.fetchall()
-    data = parse(data)
-    return render_template('displayCategory.html', data=data, categoryName=f"Resultados para '{query}'")
 
 if __name__ == '__main__':
     app.run(debug=True)
