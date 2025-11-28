@@ -153,58 +153,39 @@
                 SQL for Testers
             </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+            <input type="text" name="searchQuery" class="search-input" placeholder="Buscar productos...">
+            <button type="submit" class="search-button">
+                <i class="fas fa-search"></i>
             </button>
+            </form>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a href="{{ url_for('root') }}" class="nav-link">Inicio</a>
+            {% if not loggedIn %}
+            <a href="{{ url_for('loginForm') }}" class="btn btn-outline-primary">Iniciar Sesión</a>
+            <a href="{{ url_for('registrationForm') }}" class="btn btn-primary">Registrarse</a>
+            {% else %}
+            <a href="{{ url_for('cart') }}" class="nav-link position-relative">
+                <i class="fas fa-shopping-cart fa-lg"></i>
+                {% if noOfItems > 0 %}
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ noOfItems }}
+                </span>
+                {% endif %}
+            </a>
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown">
+                    {{ firstName }}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{{ url_for('profileHome') }}">Mi Perfil</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
                     </li>
-                    {% if loggedIn %}
-                    <li class="nav-item">
-                        <a href="{{ url_for('profileHome') }}" class="nav-link">Perfil</a>
-                    </li>
-                    {% endif %}
+                    <li><a class="dropdown-item" href="{{ url_for('logout') }}">Cerrar Sesión</a></li>
                 </ul>
-
-                <div class="d-flex align-items-center gap-3">
-                    <form class="search-form" action="{{ url_for('searchProducts') }}" method="get">
-                        <input type="text" name="searchQuery" class="search-input" placeholder="Buscar productos...">
-                        <button type="submit" class="search-button">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
-
-                    {% if not loggedIn %}
-                    <a href="{{ url_for('loginForm') }}" class="btn btn-outline-primary">Iniciar Sesión</a>
-                    <a href="{{ url_for('registrationForm') }}" class="btn btn-primary">Registrarse</a>
-                    {% else %}
-                    <a href="{{ url_for('cart') }}" class="nav-link position-relative">
-                        <i class="fas fa-shopping-cart fa-lg"></i>
-                        {% if noOfItems > 0 %}
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {{ noOfItems }}
-                        </span>
-                        {% endif %}
-                    </a>
-                    <div class="dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" id="userDropdown"
-                            data-bs-toggle="dropdown">
-                            {{ firstName }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ url_for('profileHome') }}">Mi Perfil</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">Cerrar Sesión</a></li>
-                        </ul>
-                    </div>
-                    {% endif %}
-                </div>
             </div>
+            {% endif %}
+        </div>
+        </div>
         </div>
     </nav>
 
