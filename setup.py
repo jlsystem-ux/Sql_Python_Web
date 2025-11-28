@@ -15,7 +15,7 @@ setup(
     author="Luis Alberto Arboleda",
     author_email="arboledaluisalberto28@gmail.com",
     description="An interactive platform for learning and practicing SQL in real-time",
-    long_description=open("README.md").read(),
+    long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/jlsystem-ux/Sql_Python_Web",
     classifiers=[
@@ -32,7 +32,7 @@ setup(
     python_requires=">=3.8",
     entry_points={
         "console_scripts": [
-            "sql-for-testers=app:main",
+            "sql-for-testers=main:app",
         ],
     },
 ) 

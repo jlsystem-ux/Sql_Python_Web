@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - SQL for Testers{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">{{ title }}</h1>
+    <div class="card">
+        <div class="card-body">
+            <p class="lead">{{ content }}</p>
+            <hr>
+            <p>Esta página está bajo construcción. ¡Vuelve pronto para más contenido!</p>
+            <a href="{{ url_for('root') }}" class="btn btn-secondary">Volver al Inicio</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

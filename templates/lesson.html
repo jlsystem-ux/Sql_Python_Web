@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - SQL for Testers{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                    Contenido de la Lección
+                </a>
+                <a href="#intro" class="list-group-item list-group-item-action">Introducción</a>
+                <a href="#examples" class="list-group-item list-group-item-action">Ejemplos</a>
+                <a href="#practice" class="list-group-item list-group-item-action">Práctica</a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <h1 class="mb-4">{{ title }}</h1>
+            
+            <section id="intro" class="mb-5">
+                <h2>Introducción</h2>
+                <p>{{ content }}</p>
+            </section>
+
+            <section id="examples" class="mb-5">
+                <h2>Ejemplos</h2>
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <pre><code>SELECT * FROM users;</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="practice" class="mb-5">
+                <h2>Práctica</h2>
+                <p>Ve a la página de inicio para probar tus consultas en el editor SQL en tiempo real.</p>
+                <a href="{{ url_for('root') }}" class="btn btn-primary">Ir al Editor SQL</a>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
