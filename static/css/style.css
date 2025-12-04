@@ -1,0 +1,115 @@
+/* static/css/style.css */
+:root {
+    /* Primary palette */
+    --primary-color: #4f46e5;
+    /* Indigo */
+    --primary-hover: #4338ca;
+    --secondary-color: #818cf8;
+    /* Light theme colors */
+    --light-bg: #f3f4f6;
+    --dark-bg: #1f2937;
+    --text-color: #111827;
+    --muted-text: #6b7280;
+}
+
+/* Dark mode overrides */
+[data-theme="dark"] {
+    --light-bg: #111827;
+    --dark-bg: #1f2937;
+    --text-color: #f3f4f6;
+    --muted-text: #d1d5db;
+}
+
+/* Base layout */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.navbar {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.footer {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 2rem;
+    text-align: center;
+    margin-top: auto;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+/* Toasts */
+.toast {
+    min-width: 250px;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    animation: fadein 0.3s, fadeout 0.3s 2.7s;
+}
+
+.toast-success {
+    background-color: #28a745;
+}
+
+.toast-error {
+    background-color: #dc3545;
+}
+
+.toast-info {
+    background-color: #17a2b8;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeout {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1rem;
+    }
+}

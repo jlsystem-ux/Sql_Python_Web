@@ -15,7 +15,6 @@
         font-family: 'Fira Code', monospace;
     }
 
-    /* Ensure hero section doesn't get hidden behind navbar if fixed */
     .hero {
         margin-top: 0;
     }
@@ -29,8 +28,8 @@
         <h1 class="display-4 fw-bold text-primary">Aprende SQL para Testing</h1>
         <p class="lead text-muted mb-4">Practica SQL en tiempo real con ejercicios interactivos y feedback inmediato</p>
         <div class="d-flex justify-content-center gap-3">
-            <a href="/exercises" class="btn btn-primary btn-lg px-4">Comenzar a Practicar</a>
-            <a href="/resources" class="btn btn-outline-secondary btn-lg px-4">Explorar Recursos</a>
+            <a href="/exercise/1" class="btn btn-primary btn-lg px-4">Comenzar a Practicar</a>
+            <a href="/lesson/1" class="btn btn-outline-secondary btn-lg px-4">Explorar Lecciones</a>
         </div>
     </div>
 </section>
@@ -38,16 +37,16 @@
 <!-- Categorías -->
 <section class="categories mb-5">
     <div class="container">
-        <h2 class="text-center mb-4"><i class="fas fa-th-large me-2 text-primary"></i>Categorías de Aprendizaje</h2>
+        <h2 class="text-center mb-4"><i class="fas fa-th-large me-2 text-primary"></i>Categorías de Aprendizaje SQL</h2>
         <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for row in categoryData %}
+            {% for category in categoryData %}
             <div class="col">
-                <a href="/displayCategory?categoryId={{row[0]}}" class="text-decoration-none">
+                <a href="/category/{{ category.id }}" class="text-decoration-none">
                     <div class="card h-100 shadow-sm hover-card text-center p-4">
                         <div class="card-body">
-                            <i class="fas fa-folder fa-3x text-warning mb-3"></i>
-                            <h3 class="h4 text-dark">{{row[1]}}</h3>
-                            <p class="text-muted">Explora ejercicios y lecciones</p>
+                            <i class="fas fa-code fa-3x text-primary mb-3"></i>
+                            <h3 class="h4 text-dark">{{ category.name }}</h3>
+                            <p class="text-muted">{{ category.description }}</p>
                         </div>
                     </div>
                 </a>
@@ -56,6 +55,8 @@
         </div>
     </div>
 </section>
+
+<!-- SQL Editor Section -->
 <section class="sql-editor mb-5" id="sqlEditor">
     <div class="container">
         <h2 class="text-center mb-4"><i class="fas fa-code me-2 text-dark"></i>Practica SQL en Tiempo Real</h2>
@@ -72,7 +73,7 @@
                 </div>
             </div>
             <div class="card-body p-0">
-                <textarea id="sqlEditorTextArea">SELECT * FROM users;</textarea>
+                <textarea id="sqlEditorTextArea">SELECT * FROM employees;</textarea>
             </div>
             <div class="card-footer bg-light">
                 <h5 class="mb-3">Resultados</h5>
@@ -106,14 +107,15 @@
         smartIndent: true,
         lineWrapping: true,
         matchBrackets: true,
-        autofocus: false, // Changed to false to prevent jump on load
+        autofocus: false,
         extraKeys: { "Ctrl-Space": "autocomplete" },
         hintOptions: {
             tables: {
-                users: ["id", "email", "firstName", "lastName", "password"],
-                products: ["productId", "name", "price", "description", "image", "stock"],
-                categories: ["categoryId", "name"],
-                cart: ["userId", "productId"]
+                employees: ["employee_id", "first_name", "last_name", "email", "department_id", "salary", "hire_date"],
+                departments: ["department_id", "department_name", "location"],
+                projects: ["project_id", "project_name", "description", "start_date", "end_date", "budget"],
+                bugs: ["bug_id", "bug_title", "severity", "status", "reported_by", "assigned_to"],
+                test_results: ["test_id", "test_name", "test_status", "tester_id", "project_id"]
             }
         }
     });
@@ -128,9 +130,7 @@
         try {
             const response = await fetch('/execute-sql', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ query })
             });
 
@@ -141,10 +141,7 @@
             }
 
             const data = await response.json();
-
-            if (data.error) {
-                throw new Error(data.error);
-            }
+            if (data.error) throw new Error(data.error);
 
             // Limpiar la tabla
             thead.innerHTML = '';
@@ -175,21 +172,21 @@
 
     // Función para reiniciar el editor
     document.getElementById('resetQuery').addEventListener('click', () => {
-        editor.setValue('SELECT * FROM users;');
+        editor.setValue('SELECT * FROM employees;');
         editor.focus();
     });
 
     // Función para mostrar ayuda
     document.getElementById('showHelp').addEventListener('click', () => {
-        alert('Ejemplos de consultas:\n\n' +
-            'SELECT * FROM users;\n' +
-            'SELECT name, email FROM users WHERE id = 1;\n' +
-            'SELECT * FROM products WHERE stock > 0;\n' +
-            'SELECT p.name, c.name FROM products p JOIN categories c ON p.categoryId = c.categoryId;\n\n' +
-            'Sugerencias:\n' +
-            '- Usa Ctrl+Space para autocompletar\n' +
-            '- Las consultas deben terminar con punto y coma (;)\n' +
-            '- Debes estar autenticado para ejecutar consultas');
+        alert('Ejemplos de consultas:\\n\\n' +
+            'SELECT * FROM employees;\\n' +
+            'SELECT first_name, last_name FROM employees WHERE department_id = 2;\\n' +
+            'SELECT * FROM bugs WHERE severity = \\'Critical\\';\\n' +
+            'SELECT e.first_name, d.department_name FROM employees e JOIN departments d ON e.department_id = d.department_id;\\n\\n' +
+            'Sugerencias:\\n' +
+            '- Usa Ctrl+Space para autocompletar\\n' +
+            '- Las consultas deben terminar con punto y coma (;)\\n' +
+        '- Debes estar autenticado para ejecutar consultas');
     });
 </script>
 {% endblock %}

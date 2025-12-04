@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Mi Perfil - SQL for Testers{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- User Info Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body py-5">
+                    <div class="mb-4">
+                        <div class="avatar-circle bg-primary text-white mx-auto d-flex align-items-center justify-content-center"
+                            style="width: 100px; height: 100px; font-size: 2.5rem; border-radius: 50%;">
+                            {{ user.firstName[0] }}{{ user.lastName[0] }}
+                        </div>
+                    </div>
+                    <h3 class="card-title">{{ user.firstName }} {{ user.lastName }}</h3>
+                    <p class="text-muted">{{ user.email }}</p>
+                    <hr>
+                    <div class="d-grid gap-2">
+                        <a href="/editProfile" class="btn btn-outline-primary"><i class="fas fa-edit me-2"></i>Editar
+                            Perfil</a>
+                        <a href="/logout" class="btn btn-outline-danger"><i class="fas fa-sign-out-alt me-2"></i>Cerrar
+                            Sesión</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats & Progress -->
+        <div class="col-md-8">
+            <!-- Progress Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-chart-line me-2 text-primary"></i>Mi Progreso</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center mb-4">
+                        <div class="col-6">
+                            <h2 class="display-4 fw-bold text-success">{{ completed_count }}</h2>
+                            <p class="text-muted">Ejercicios Completados</p>
+                        </div>
+                        <div class="col-6">
+                            <h2 class="display-4 fw-bold text-primary">{{ total_exercises }}</h2>
+                            <p class="text-muted">Total Ejercicios</p>
+                        </div>
+                    </div>
+
+                    <h6 class="mb-2">Progreso General</h6>
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                            role="progressbar" style="width: {{ progress_percent }}%;"
+                            aria-valuenow="{{ progress_percent }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ progress_percent }}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-history me-2 text-info"></i>Actividad Reciente</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if recent_activity %}
+                    <ul class="list-group list-group-flush">
+                        {% for activity in recent_activity %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <div>
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Completaste un ejercicio en <strong>{{ activity[0] }}</strong>
+                            </div>
+                            <small class="text-muted">{{ activity[1] }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="p-4 text-center text-muted">
+                        <i class="fas fa-clipboard-list fa-3x mb-3 text-light"></i>
+                        <p>Aún no has completado ningún ejercicio. ¡Empieza hoy!</p>
+                        <a href="/" class="btn btn-primary mt-2">Ir a Ejercicios</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

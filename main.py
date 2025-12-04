@@ -14,53 +14,216 @@ ALLOWED_EXTENSIONS = {'jpeg', 'jpg', 'png', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['DATABASE'] = 'database.db'
 
+# SQL Learning Categories
+categories_data = [
+    {"id": 1, "name": "SQL Fundamentals", "description": "SELECT, WHERE, ORDER BY, LIMIT"},
+    {"id": 2, "name": "Filtering & Sorting", "description": "AND/OR/NOT, IN, BETWEEN, LIKE"},
+    {"id": 3, "name": "Aggregate Functions", "description": "COUNT, SUM, AVG, GROUP BY, HAVING"},
+    {"id": 4, "name": "Joins & Relationships", "description": "INNER JOIN, LEFT JOIN, RIGHT JOIN"},
+    {"id": 5, "name": "Subqueries", "description": "Nested queries, IN, EXISTS"},
+    {"id": 6, "name": "Advanced Queries", "description": "UNION, CTEs, Window functions"},
+    {"id": 7, "name": "Data Manipulation", "description": "INSERT, UPDATE, DELETE"},
+    {"id": 8, "name": "Database Objects", "description": "Views, Indexes, Triggers"},
+]
+
 # Lesson Data
 lessons_data = {
+    # SQL Fundamentals
     1: {
-        "title": "Introducción a SQL",
-        "content": "SQL (Structured Query Language) es el lenguaje estándar para gestionar bases de datos relacionales. En esta lección aprenderás qué es una base de datos, una tabla y cómo realizar tu primera consulta.",
+        "title": "Introducción a SELECT",
+        "category": "SQL Fundamentals",
+        "content": "SELECT es la instrucción más fundamental en SQL. Te permite recuperar datos de una o más tablas. Aprenderás a seleccionar todas las columnas o columnas específicas.",
         "examples": [
-            {"title": "Tu primera consulta", "code": "SELECT * FROM users;"}
+            {"title": "Seleccionar todo", "code": "SELECT * FROM employees;"},
+            {"title": "Columnas específicas", "code": "SELECT first_name, last_name, email FROM employees;"},
         ]
     },
     2: {
-        "title": "Consultas Básicas",
-        "content": "La sentencia SELECT es la más importante en SQL. Te permite recuperar datos de una o más tablas. Aprenderemos a seleccionar columnas específicas.",
+        "title": "WHERE - Filtrado Básico",
+        "category": "SQL Fundamentals",
+        "content": "La cláusula WHERE te permite filtrar resultados para obtener solo los datos que cumplen ciertas condiciones.",
         "examples": [
-            {"title": "Seleccionar columnas específicas", "code": "SELECT firstName, email FROM users;"}
+            {"title": "Filtrar por valor", "code": "SELECT * FROM employees WHERE department_id = 2;"},
+            {"title": "Comparación numérica", "code": "SELECT * FROM employees WHERE salary > 80000;"},
         ]
     },
     3: {
-        "title": "Filtrado de Datos",
-        "content": "La cláusula WHERE te permite filtrar resultados para obtener solo los datos que cumplen con ciertas condiciones.",
+        "title": "ORDER BY y LIMIT",
+        "category": "SQL Fundamentals",
+        "content": "ORDER BY ordena los resultados. LIMIT restringe el número de filas devueltas.",
         "examples": [
-            {"title": "Filtrar por ID", "code": "SELECT * FROM users WHERE userId = 1;"}
+            {"title": "Ordenar ascendente", "code": "SELECT * FROM employees ORDER BY salary ASC;"},
+            {"title": "Top 5 salarios", "code": "SELECT * FROM employees ORDER BY salary DESC LIMIT 5;"},
         ]
-    }
+    },
+    # Filtering & Sorting
+    4: {
+        "title": "Operadores Lógicos (AND, OR, NOT)",
+        "category": "Filtering & Sorting",
+        "content": "Combina múltiples condiciones usando AND, OR y NOT para filtros más complejos.",
+        "examples": [
+            {"title": "AND", "code": "SELECT * FROM employees WHERE department_id = 2 AND salary > 75000;"},
+            {"title": "OR", "code": "SELECT * FROM bugs WHERE severity = 'Critical' OR severity = 'High';"},
+        ]
+    },
+    5: {
+        "title": "IN, BETWEEN, LIKE",
+        "category": "Filtering & Sorting",
+        "content": "Operadores especiales para filtrado avanzado: IN para listas, BETWEEN para rangos, LIKE para patrones.",
+        "examples": [
+            {"title": "IN", "code": "SELECT * FROM bugs WHERE status IN ('Open', 'In Progress');"},
+            {"title": "LIKE", "code": "SELECT * FROM employees WHERE email LIKE '%@company.com';"},
+        ]
+    },
+    # Aggregate Functions
+    6: {
+        "title": "COUNT, SUM, AVG, MIN, MAX",
+        "category": "Aggregate Functions",
+        "content": "Funciones de agregación calculan valores sobre un conjunto de filas.",
+        "examples": [
+            {"title": "COUNT", "code": "SELECT COUNT(*) as total_employees FROM employees;"},
+            {"title": "AVG", "code": "SELECT AVG(salary) as avg_salary FROM employees;"},
+        ]
+    },
+    7: {
+        "title": "GROUP BY y HAVING",
+        "category": "Aggregate Functions",
+        "content": "GROUP BY agrupa filas con valores similares. HAVING filtra grupos.",
+        "examples": [
+            {"title": "GROUP BY", "code": "SELECT department_id, COUNT(*) FROM employees GROUP BY department_id;"},
+            {"title": "HAVING", "code": "SELECT department_id, AVG(salary) FROM employees GROUP BY department_id HAVING AVG(salary) > 85000;"},
+        ]
+    },
+    # Joins
+    8: {
+        "title": "INNER JOIN",
+        "category": "Joins & Relationships",
+        "content": "INNER JOIN combina filas de dos tablas basándose en una condición relacionada.",
+        "examples": [
+            {"title": "Join básico", "code": "SELECT e.first_name, e.last_name, d.department_name FROM employees e INNER JOIN departments d ON e.department_id = d.department_id;"},
+        ]
+    },
+    9: {
+        "title": "LEFT JOIN y RIGHT JOIN",
+        "category": "Joins & Relationships",
+        "content": "LEFT/RIGHT JOIN devuelve todas las filas de una tabla y las coincidencias de la otra.",
+        "examples": [
+            {"title": "LEFT JOIN", "code": "SELECT p.project_name, COUNT(ep.employee_id) FROM projects p LEFT JOIN employee_projects ep ON p.project_id = ep.project_id GROUP BY p.project_name;"},
+        ]
+    },
+    # Subqueries
+    10: {
+        "title": "Subconsultas Básicas",
+        "category": "Subqueries",
+        "content": "Una subconsulta es una consulta dentro de otra consulta.",
+        "examples": [
+            {"title": "Subquery en WHERE", "code": "SELECT * FROM employees WHERE salary > (SELECT AVG(salary) FROM employees);"},
+        ]
+    },
 }
 
 challenges_data = {
+    # SQL Fundamentals
     1: {
-        "title": "Seleccionar Todos los Usuarios",
-        "description": "Recupera todas las columnas de la tabla 'users'.",
-        "difficulty": "Básico",
-        "solution_query": "SELECT * FROM users",
+        "title": "Listar Todos los Empleados",
+        "description": "Recupera todas las columnas de la tabla 'employees'.",
+        "difficulty": "Beginner",
+        "category": "SQL Fundamentals",
+        "solution_query": "SELECT * FROM employees",
         "hint": "Usa SELECT * FROM nombre_tabla"
     },
     2: {
-        "title": "Nombres de Productos",
-        "description": "Obtén solo el nombre (name) y el precio (price) de todos los productos.",
-        "difficulty": "Básico",
-        "solution_query": "SELECT name, price FROM products",
-        "hint": "Especifica las columnas separadas por coma: SELECT col1, col2 FROM..."
+        "title": "Empleados del Departamento QA",
+        "description": "Encuentra todos los empleados que trabajan en el departamento con department_id = 2 (Quality Assurance).",
+        "difficulty": "Beginner",
+        "category": "SQL Fundamentals",
+        "solution_query": "SELECT * FROM employees WHERE department_id = 2",
+        "hint": "Usa WHERE para filtrar por department_id"
     },
     3: {
-        "title": "Productos Caros",
-        "description": "Encuentra todos los productos que cuesten más de 20 dólares.",
-        "difficulty": "Intermedio",
-        "solution_query": "SELECT * FROM products WHERE price > 20",
-        "hint": "Usa la cláusula WHERE con el operador >"
-    }
+        "title": "Top 5 Salarios Más Altos",
+        "description": "Obtén los 5 empleados con los salarios más altos.",
+        "difficulty": "Beginner",
+        "category": "SQL Fundamentals",
+        "solution_query": "SELECT * FROM employees ORDER BY salary DESC LIMIT 5",
+        "hint": "Usa ORDER BY salary DESC LIMIT 5"
+    },
+    # Filtering & Sorting
+    4: {
+        "title": "Bugs Críticos y Altos",
+        "description": "Encuentra todos los bugs con severity 'Critical' o 'High'.",
+        "difficulty": "Beginner",
+        "category": "Filtering & Sorting",
+        "solution_query": "SELECT * FROM bugs WHERE severity IN ('Critical', 'High')",
+        "hint": "Usa IN ('Critical', 'High') o severity = 'Critical' OR severity = 'High'"
+    },
+    5: {
+        "title": "Empleados con Email de Compañía",
+        "description": "Encuentra todos los empleados cuyo email termina en '@company.com'.",
+        "difficulty": "Beginner",
+        "category": "Filtering & Sorting",
+        "solution_query": "SELECT * FROM employees WHERE email LIKE '%@company.com'",
+        "hint": "Usa LIKE con el patrón '%@company.com'"
+    },
+    # Aggregate Functions
+    6: {
+        "title": "Contar Empleados por Departamento",
+        "description": "Cuenta cuántos empleados hay en cada departamento.",
+        "difficulty": "Intermediate",
+        "category": "Aggregate Functions",
+        "solution_query": "SELECT department_id, COUNT(*) as employee_count FROM employees GROUP BY department_id",
+        "hint": "Usa COUNT(*) con GROUP BY department_id"
+    },
+    7: {
+        "title": "Salario Promedio por Departamento",
+        "description": "Calcula el salario promedio de cada departamento.",
+        "difficulty": "Intermediate",
+        "category": "Aggregate Functions",
+        "solution_query": "SELECT department_id, AVG(salary) as avg_salary FROM employees GROUP BY department_id",
+        "hint": "Usa AVG(salary) con GROUP BY"
+    },
+    8: {
+        "title": "Tests Fallidos por Proyecto",
+        "description": "Cuenta cuántos tests han fallado en cada proyecto.",
+        "difficulty": "Intermediate",
+        "category": "Aggregate Functions",
+        "solution_query": "SELECT project_id, COUNT(*) as failed_count FROM test_results WHERE test_status = 'Failed' GROUP BY project_id",
+        "hint": "Filtra por test_status = 'Failed' y agrupa por project_id"
+    },
+    # Joins & Relationships
+    9: {
+        "title": "Empleados con Nombre de Departamento",
+        "description": "Lista todos los empleados junto con el nombre de su departamento.",
+        "difficulty": "Intermediate",
+        "category": "Joins & Relationships",
+        "solution_query": "SELECT e.first_name, e.last_name, d.department_name FROM employees e INNER JOIN departments d ON e.department_id = d.department_id",
+        "hint": "Usa INNER JOIN entre employees y departments"
+    },
+    10: {
+        "title": "Proyectos con Conteo de Empleados",
+        "description": "Lista todos los proyectos y cuántos empleados están asignados a cada uno.",
+        "difficulty": "Intermediate",
+        "category": "Joins & Relationships",
+        "solution_query": "SELECT p.project_name, COUNT(ep.employee_id) as employee_count FROM projects p LEFT JOIN employee_projects ep ON p.project_id = ep.project_id GROUP BY p.project_name",
+        "hint": "Usa LEFT JOIN con employee_projects y GROUP BY"
+    },
+    # Subqueries
+    11: {
+        "title": "Empleados con Salario Sobre el Promedio",
+        "description": "Encuentra todos los empleados que ganan más que el salario promedio.",
+        "difficulty": "Advanced",
+        "category": "Subqueries",
+        "solution_query": "SELECT * FROM employees WHERE salary > (SELECT AVG(salary) FROM employees)",
+        "hint": "Usa una subconsulta: WHERE salary > (SELECT AVG(salary) FROM employees)"
+    },
+    12: {
+        "title": "Bugs Reportados por Testers QA",
+        "description": "Encuentra todos los bugs reportados por empleados del departamento de QA (department_id = 2).",
+        "difficulty": "Advanced",
+        "category": "Subqueries",
+        "solution_query": "SELECT * FROM bugs WHERE reported_by IN (SELECT employee_id FROM employees WHERE department_id = 2)",
+        "hint": "Usa IN con una subconsulta que filtre employees por department_id"
+    },
 }
 
 @app.teardown_appcontext
@@ -119,8 +282,15 @@ def inject_user():
     """Inject user details into all templates."""
     user = get_current_user()
     if user:
-        return dict(loggedIn=True, firstName=user['firstName'], noOfItems=get_cart_count(user['userId']))
+        return dict(loggedIn=True, firstName=user['firstName'], noOfItems=0)
     return dict(loggedIn=False, firstName='', noOfItems=0)
+
+def get_user_progress(user_id):
+    """Get set of completed exercise IDs for a user."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute('SELECT exercise_id FROM user_progress WHERE user_id = ? AND completed = 1', (user_id,))
+    return {row[0] for row in cur.fetchall()}
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -129,14 +299,32 @@ def allowed_file(filename):
 # Home page
 @app.route("/")
 def root():
-    db = get_db()
-    cur = db.cursor()
-    cur.execute('SELECT productId, name, price, description, image, stock FROM products')
-    itemData = cur.fetchall()
-    cur.execute('SELECT categoryId, name FROM categories')
-    categoryData = cur.fetchall()
+    return render_template('home.html', categoryData=categories_data)
+
+@app.route("/category/<int:category_id>")
+def category(category_id):
+    """Display lessons and exercises for a specific category."""
+    # Find the category
+    category = next((c for c in categories_data if c['id'] == category_id), None)
+    if not category:
+        return render_template('404.html'), 404
     
-    return render_template('home.html', itemData=itemData, categoryData=categoryData)
+    # Filter lessons and exercises by category
+    category_lessons = {k: v for k, v in lessons_data.items() if v.get('category') == category['name']}
+    category_exercises = {k: v for k, v in challenges_data.items() if v.get('category') == category['name']}
+    
+    # Get user progress if logged in
+    completed_exercises = set()
+    if 'email' in session:
+        user = get_current_user()
+        if user:
+            completed_exercises = get_user_progress(user['userId'])
+
+    return render_template('category.html', 
+                         category=category, 
+                         lessons=category_lessons, 
+                         exercises=category_exercises,
+                         completed_exercises=completed_exercises)
 
 @app.route("/lesson/<int:lesson_id>")
 def lesson(lesson_id):
@@ -206,6 +394,27 @@ def validate_query():
         
         message = "¡Correcto! Has resuelto el ejercicio." if is_correct else "Los resultados no coinciden con la solución esperada."
         
+        # 4. Save Progress if Correct
+        if is_correct and 'email' in session:
+            user = get_current_user()
+            if user:
+                try:
+                    # Check if already completed
+                    cur.execute('''
+                        SELECT 1 FROM user_progress 
+                        WHERE user_id = ? AND exercise_id = ?
+                    ''', (user['userId'], int(exercise_id)))
+                    
+                    if not cur.fetchone():
+                        # Record completion
+                        cur.execute('''
+                            INSERT INTO user_progress (user_id, category_name, lesson_id, exercise_id, completed, completed_at)
+                            VALUES (?, ?, ?, ?, 1, datetime('now'))
+                        ''', (user['userId'], exercise.get('category', 'General'), 0, int(exercise_id)))
+                        conn.commit()
+                except Exception as e:
+                    print(f"Error saving progress: {e}")
+
         return jsonify({
             'correct': is_correct,
             'message': message,
@@ -288,6 +497,43 @@ def updateProfile():
             db.rollback()
             msg = "Error occured"
         return redirect(url_for('editProfile'))
+
+@app.route("/profile")
+@login_required
+def profile():
+    user = get_current_user()
+    if not user:
+        return redirect(url_for('loginForm'))
+        
+    conn = get_db()
+    cur = conn.cursor()
+    
+    # Get completed exercises count
+    cur.execute('SELECT COUNT(*) FROM user_progress WHERE user_id = ? AND completed = 1', (user['userId'],))
+    completed_count = cur.fetchone()[0]
+    
+    # Get total exercises
+    total_exercises = len(challenges_data)
+    
+    # Calculate percentage
+    progress_percent = int((completed_count / total_exercises) * 100) if total_exercises > 0 else 0
+    
+    # Get recent activity
+    cur.execute('''
+        SELECT category_name, completed_at 
+        FROM user_progress 
+        WHERE user_id = ? 
+        ORDER BY completed_at DESC 
+        LIMIT 5
+    ''', (user['userId'],))
+    recent_activity = cur.fetchall()
+    
+    return render_template('profile.html', 
+                         user=user, 
+                         completed_count=completed_count,
+                         total_exercises=total_exercises,
+                         progress_percent=progress_percent,
+                         recent_activity=recent_activity)
 
 @app.route("/loginForm")
 def loginForm():

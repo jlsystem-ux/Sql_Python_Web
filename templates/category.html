@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} - SQL for Testers{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Category Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary">
+            <i class="fas fa-code me-3"></i>{{ category.name }}
+        </h1>
+        <p class="lead text-muted">{{ category.description }}</p>
+    </div>
+
+    <!-- Lessons Section -->
+    <section class="mb-5">
+        <h2 class="mb-4"><i class="fas fa-book me-2 text-primary"></i>Lecciones</h2>
+        {% if lessons %}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for lesson_id, lesson in lessons.items() %}
+            <div class="col">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">
+                            <i class="fas fa-graduation-cap me-2"></i>{{ lesson.title }}
+                        </h5>
+                        <p class="card-text text-muted">{{ lesson.content[:150] }}...</p>
+                        <a href="/lesson/{{ lesson_id }}" class="btn btn-outline-primary btn-sm">
+                            Ver Lección <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No hay lecciones disponibles para esta categoría aún.
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- Exercises Section -->
+    <section class="mb-5">
+        <h2 class="mb-4"><i class="fas fa-dumbbell me-2 text-success"></i>Ejercicios Prácticos</h2>
+        {% if exercises %}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for exercise_id, exercise in exercises.items() %}
+            <div class="col">
+                <div class="card h-100 shadow-sm hover-card border-start border-4 
+                    {% if exercise.difficulty == 'Beginner' %}border-success
+                    {% elif exercise.difficulty == 'Intermediate' %}border-warning
+                    {% else %}border-danger{% endif %}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title">
+                                {{ exercise.title }}
+                                {% if exercise_id in completed_exercises %}
+                                <span class="badge bg-success ms-2" title="Completado"><i
+                                        class="fas fa-check"></i></span>
+                                {% endif %}
+                            </h5>
+                            <span class="badge 
+                                {% if exercise.difficulty == 'Beginner' %}bg-success
+                                {% elif exercise.difficulty == 'Intermediate' %}bg-warning
+                                {% else %}bg-danger{% endif %}">
+                                {{ exercise.difficulty }}
+                            </span>
+                        </div>
+                        <p class="card-text text-muted">{{ exercise.description }}</p>
+                        <a href="/exercise/{{ exercise_id }}" class="btn btn-success btn-sm">
+                            Practicar <i class="fas fa-play ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No hay ejercicios disponibles para esta categoría aún.
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- Back Button -->
+    <div class="text-center mt-5">
+        <a href="/" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Volver a Categorías
+        </a>
+    </div>
+</div>
+{% endblock %}
